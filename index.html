@@ -1,80 +1,94 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#360d05" />
-  <meta name="description" content="雙重活動火熱開跑｜五人成團與幸運金大放送" />
-  <title>雙重活動火熱開跑｜五人成團・幸運金大放送</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07172c">
+  <meta name="description" content="雙重活動火熱開跑：五人成團、幸運金大放送。">
+  <meta property="og:title" content="雙重活動火熱開跑｜皇鼎">
+  <meta property="og:description" content="五人成團、幸運金大放送，活動詳情立即查看。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="poster.png">
+  <title>雙重活動火熱開跑｜皇鼎</title>
+  <link rel="preload" as="image" href="poster.png">
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html { margin: 0; padding: 0; scroll-behavior: smooth; background: #210903; }
-    body { margin: 0; padding: 0; background: #210903; overflow-x: hidden; }
-    .landing { width: 100%; max-width: 941px; margin: 0 auto; }
-    .panel { position: relative; width: 100%; line-height: 0; }
-    .panel > .poster { display: block; width: 100%; height: auto; border: 0; }
-    .line-button {
-      position: absolute;
-      /* 這些數值對準第二張原圖的綠色 LINE 按鈕，不必修改 */
-      left: 11.0521%;
-      top: 84.0909%;
-      width: 77.6833%;
-      height: 8.3732%;
-      z-index: 2;
-      display: block;
-      border: 0;
-      border-radius: 999px;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transform-origin: center center;
-      animation: line-heartbeat 1.8s ease-in-out infinite;
-      will-change: transform, filter;
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html,body { margin:0; min-height:100%; width:100%; }
+    body { background:#07172c; overflow-x:hidden; }
+    main { max-width:725px; width:100%; margin:0 auto; }
+    .poster { position:relative; width:100%; line-height:0; isolation:isolate; }
+    .poster > img { display:block; width:100%; height:auto; -webkit-user-drag:none; user-select:none; }
+    .cta {
+      position:absolute; display:block; z-index:2; cursor:pointer;
+      border-radius:999px; outline-offset:3px; text-decoration:none;
+      transform-origin:50% 50%; will-change:transform,filter;
+      -webkit-tap-highlight-color:transparent;
     }
-    .line-button img {
-      display: block; width: 100%; height: 100%;
-      border: 0; pointer-events: none; user-select: none;
-      -webkit-user-drag: none;
+    .cta img { width:100%; height:100%; display:block; pointer-events:none; }
+    .cta:focus-visible { outline:3px solid #fff; }
+    /* Coordinates measured on approved original image, 725 x 2170 pixels */
+    .cta-line { left:7.172414%; top:86.082949%; width:85.793103%; height:4.838710%; animation:heartA 3.2s ease-in-out infinite; }
+    .cta-register { left:5.931034%; top:91.059908%; width:87.724138%; height:5.115207%; animation:heartB 3.2s ease-in-out infinite; }
+    @keyframes heartA {
+      0%,7%,15%,23%,100% {transform:scale(1);filter:drop-shadow(0 0 0 transparent)}
+      11% {transform:scale(1.035);filter:drop-shadow(0 0 11px rgba(35,255,113,.65))}
+      19% {transform:scale(1.060);filter:drop-shadow(0 0 16px rgba(35,255,113,.70))}
     }
-    .line-button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
-    .line-button:hover { filter: brightness(1.08); }
-    @keyframes line-heartbeat {
-      0%, 12%, 30%, 48%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,255,80,0)); }
-      20% { transform: scale(1.038); filter: drop-shadow(0 0 8px rgba(44,255,85,.60)); }
-      38% { transform: scale(1.056); filter: drop-shadow(0 0 13px rgba(44,255,85,.78)); }
-      65% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,255,80,0)); }
+    @keyframes heartB {
+      0%,50%,58%,66%,100% {transform:scale(1);filter:drop-shadow(0 0 0 transparent)}
+      54% {transform:scale(1.035);filter:drop-shadow(0 0 11px rgba(60,132,255,.65))}
+      62% {transform:scale(1.060);filter:drop-shadow(0 0 16px rgba(60,132,255,.75))}
     }
-    @media (prefers-reduced-motion: reduce) {
-      .line-button { animation: none; }
+    @media (prefers-reduced-motion:reduce) {
+      .cta-line,.cta-register {animation:none!important;filter:none!important;transform:none!important}
     }
+    #toast {
+      position:fixed;z-index:10;bottom:calc(18px + env(safe-area-inset-bottom));
+      left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);
+      padding:13px 19px;border:1px solid #ba9146;border-radius:12px;
+      background:rgba(11,23,44,.96);color:#fff;font:600 15px/1.5 system-ui,"Microsoft JhengHei",sans-serif;
+      text-align:center;box-shadow:0 7px 20px #0007;
+    }
+    #toast[hidden] {display:none}
   </style>
 </head>
 <body>
-  <main class="landing">
-    <!-- 上方50%：五人成團原圖。不要改動，以免文字跑版。 -->
-    <section class="panel" aria-label="五人成團活動">
-      <img class="poster" src="./top.png" alt="雙重活動火熱開跑，五人成團，流水達標全隊領。" width="941" height="1672" fetchpriority="high" />
-    </section>
-    <!-- 下方50%：抽獎原圖。圖片本身不修改，只在 LINE 按鈕位置疊一層動畫。 -->
-    <section class="panel" aria-label="幸運金抽獎活動">
-      <img class="poster" src="./bottom.png" alt="幸運金大放送，50%的人都有獎。" width="941" height="1672" />
-      <a id="lineButton" class="line-button" href="#" aria-label="加入 LINE 立即參加" rel="noopener noreferrer" target="_blank">
-        <img src="./line-button.png" alt="" aria-hidden="true" width="731" height="140" />
+  <main>
+    <div class="poster">
+      <!-- Single continuous approved poster: no visible joins, no re-rendered text -->
+      <img src="poster.png" width="725" height="2170" alt="雙重活動火熱開跑：上半部五人成團與流水獎勵，下半部幸運金大放送與抽獎獎項，最下方有兩個參加按鈕。" fetchpriority="high">
+      <a class="cta cta-line" id="lineButton" href="#" aria-label="加入LINE立即領取">
+        <img src="button-line.png" alt="" aria-hidden="true" width="622" height="105">
       </a>
-    </section>
+      <a class="cta cta-register" id="registerButton" href="#" aria-label="立即註冊加入抽獎群">
+        <img src="button-register.png" alt="" aria-hidden="true" width="636" height="111">
+      </a>
+    </div>
   </main>
+  <div id="toast" role="status" aria-live="polite" hidden>連結尚未設定，請稍後再試。</div>
   <script>
-    // ★只需要修改這一行：把雙引號裡換成你自己的 LINE 加好友網址。
+    // 在兩個引號中填入正式網址；目前留空方便先測試網站及心跳動畫。
     const LINE_URL = "";
+    const REGISTER_URL = "";
 
-    const lineButton = document.getElementById("lineButton");
-    if (/^https:\/\//i.test(LINE_URL)) {
-      lineButton.href = LINE_URL;
-    } else {
-      lineButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        alert("尚未設定 LINE 加好友網址，請先修改 index.html 裡的 LINE_URL。");
-      });
+    function setupLink(id, url) {
+      const a = document.getElementById(id);
+      const validUrl = /^(https?:\/\/)/i.test(url.trim());
+      if (validUrl) {
+        a.href = url.trim();
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+      } else {
+        a.addEventListener("click", (event) => {
+          event.preventDefault();
+          const toast = document.getElementById("toast");
+          toast.hidden = false;
+        });
+      }
     }
+    setupLink("lineButton", LINE_URL);
+    setupLink("registerButton", REGISTER_URL);
   </script>
 </body>
 </html>
