@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#360d05" />
+  <meta name="description" content="雙重活動火熱開跑｜五人成團與幸運金大放送" />
+  <title>雙重活動火熱開跑｜五人成團・幸運金大放送</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { margin: 0; padding: 0; scroll-behavior: smooth; background: #210903; }
+    body { margin: 0; padding: 0; background: #210903; overflow-x: hidden; }
+    .landing { width: 100%; max-width: 941px; margin: 0 auto; }
+    .panel { position: relative; width: 100%; line-height: 0; }
+    .panel > .poster { display: block; width: 100%; height: auto; border: 0; }
+    .line-button {
+      position: absolute;
+      /* 這些數值對準第二張原圖的綠色 LINE 按鈕，不必修改 */
+      left: 11.0521%;
+      top: 84.0909%;
+      width: 77.6833%;
+      height: 8.3732%;
+      z-index: 2;
+      display: block;
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transform-origin: center center;
+      animation: line-heartbeat 1.8s ease-in-out infinite;
+      will-change: transform, filter;
+    }
+    .line-button img {
+      display: block; width: 100%; height: 100%;
+      border: 0; pointer-events: none; user-select: none;
+      -webkit-user-drag: none;
+    }
+    .line-button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+    .line-button:hover { filter: brightness(1.08); }
+    @keyframes line-heartbeat {
+      0%, 12%, 30%, 48%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,255,80,0)); }
+      20% { transform: scale(1.038); filter: drop-shadow(0 0 8px rgba(44,255,85,.60)); }
+      38% { transform: scale(1.056); filter: drop-shadow(0 0 13px rgba(44,255,85,.78)); }
+      65% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,255,80,0)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .line-button { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="landing">
+    <!-- 上方50%：五人成團原圖。不要改動，以免文字跑版。 -->
+    <section class="panel" aria-label="五人成團活動">
+      <img class="poster" src="./top.png" alt="雙重活動火熱開跑，五人成團，流水達標全隊領。" width="941" height="1672" fetchpriority="high" />
+    </section>
+    <!-- 下方50%：抽獎原圖。圖片本身不修改，只在 LINE 按鈕位置疊一層動畫。 -->
+    <section class="panel" aria-label="幸運金抽獎活動">
+      <img class="poster" src="./bottom.png" alt="幸運金大放送，50%的人都有獎。" width="941" height="1672" />
+      <a id="lineButton" class="line-button" href="#" aria-label="加入 LINE 立即參加" rel="noopener noreferrer" target="_blank">
+        <img src="./line-button.png" alt="" aria-hidden="true" width="731" height="140" />
+      </a>
+    </section>
+  </main>
+  <script>
+    // ★只需要修改這一行：把雙引號裡換成你自己的 LINE 加好友網址。
+    const LINE_URL = "";
+
+    const lineButton = document.getElementById("lineButton");
+    if (/^https:\/\//i.test(LINE_URL)) {
+      lineButton.href = LINE_URL;
+    } else {
+      lineButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        alert("尚未設定 LINE 加好友網址，請先修改 index.html 裡的 LINE_URL。");
+      });
+    }
+  </script>
+</body>
+</html>
