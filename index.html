@@ -3,92 +3,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#07172c">
-  <meta name="description" content="雙重活動火熱開跑：五人成團、幸運金大放送。">
-  <meta property="og:title" content="雙重活動火熱開跑｜皇鼎">
-  <meta property="og:description" content="五人成團、幸運金大放送，活動詳情立即查看。">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="poster.png">
-  <title>雙重活動火熱開跑｜皇鼎</title>
-  <link rel="preload" as="image" href="poster.png">
+  <meta name="theme-color" content="#10091c">
+  <meta name="description" content="萬聖狂歡限定・立即體驗｜獨家 VBall 彈珠遊戲開跑">
+  <title>萬聖狂歡限定・立即體驗</title>
+  <link rel="preload" href="./halloween-poster.png" as="image">
   <style>
-    :root { color-scheme: dark; }
-    * { box-sizing: border-box; }
-    html,body { margin:0; min-height:100%; width:100%; }
-    body { background:#07172c; overflow-x:hidden; }
-    main { max-width:725px; width:100%; margin:0 auto; }
-    .poster { position:relative; width:100%; line-height:0; isolation:isolate; }
-    .poster > img { display:block; width:100%; height:auto; -webkit-user-drag:none; user-select:none; }
-    .cta {
-      position:absolute; display:block; z-index:2; cursor:pointer;
-      border-radius:999px; outline-offset:3px; text-decoration:none;
-      transform-origin:50% 50%; will-change:transform,filter;
-      -webkit-tap-highlight-color:transparent;
-    }
-    .cta img { width:100%; height:100%; display:block; pointer-events:none; }
-    .cta:focus-visible { outline:3px solid #fff; }
-    /* Coordinates measured on approved original image, 725 x 2170 pixels */
-    .cta-line { left:7.172414%; top:86.082949%; width:85.793103%; height:4.838710%; animation:heartA 3.2s ease-in-out infinite; }
-    .cta-register { left:5.931034%; top:91.059908%; width:87.724138%; height:5.115207%; animation:heartB 3.2s ease-in-out infinite; }
-    @keyframes heartA {
-      0%,7%,15%,23%,100% {transform:scale(1);filter:drop-shadow(0 0 0 transparent)}
-      11% {transform:scale(1.035);filter:drop-shadow(0 0 11px rgba(35,255,113,.65))}
-      19% {transform:scale(1.060);filter:drop-shadow(0 0 16px rgba(35,255,113,.70))}
-    }
-    @keyframes heartB {
-      0%,50%,58%,66%,100% {transform:scale(1);filter:drop-shadow(0 0 0 transparent)}
-      54% {transform:scale(1.035);filter:drop-shadow(0 0 11px rgba(60,132,255,.65))}
-      62% {transform:scale(1.060);filter:drop-shadow(0 0 16px rgba(60,132,255,.75))}
-    }
-    @media (prefers-reduced-motion:reduce) {
-      .cta-line,.cta-register {animation:none!important;filter:none!important;transform:none!important}
-    }
-    #toast {
-      position:fixed;z-index:10;bottom:calc(18px + env(safe-area-inset-bottom));
-      left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);
-      padding:13px 19px;border:1px solid #ba9146;border-radius:12px;
-      background:rgba(11,23,44,.96);color:#fff;font:600 15px/1.5 system-ui,"Microsoft JhengHei",sans-serif;
-      text-align:center;box-shadow:0 7px 20px #0007;
-    }
-    #toast[hidden] {display:none}
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;width:100%;min-height:100%;overflow:hidden;background:#10091c}
+    body{height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif}
+    .stage{position:relative;width:min(100vw,calc(100dvh * 941 / 1672));max-height:100dvh;aspect-ratio:941/1672;overflow:hidden;background:#10091c;isolation:isolate}
+    .poster{width:100%;height:100%;display:block;object-fit:fill;animation:poster-enter 3.1s cubic-bezier(.16,.75,.25,1) both;transform-origin:center center}
+    .stage::before{content:"";position:absolute;z-index:3;inset:0;pointer-events:none;background:#08050e;animation:curtain 2.4s ease-out forwards}
+    .stage::after{content:"";position:absolute;z-index:2;inset:-35%;pointer-events:none;background:linear-gradient(112deg,transparent 42%,rgba(255,226,158,.14) 50%,transparent 58%);transform:translateX(-90%);animation:glint 9s 3s ease-in-out infinite}
+    .cta{position:absolute;z-index:5;display:block;top:84.4%;height:8.7%;border-radius:18%;text-decoration:none;-webkit-tap-highlight-color:transparent;outline-offset:-3px;opacity:0;animation:cta-enter .7s 2.25s ease-out forwards}
+    .cta:focus-visible{outline:3px solid #fff}
+    .cta.customer{left:3.0%;width:45.3%}
+    .cta.reward{left:50.1%;width:46.8%}
+    .cta::after{content:"";position:absolute;inset:6%;border-radius:16px;box-shadow:0 0 0 0 rgba(255,218,100,0);animation:halo 3s 4s ease-in-out infinite;pointer-events:none}
+    .cta:active{transform:scale(.97)}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;clip-path:inset(50%)}
+    @keyframes curtain{0%,12%{opacity:1}100%{opacity:0}}
+    @keyframes poster-enter{0%{opacity:.35;transform:scale(1.055);filter:brightness(.55)}60%{opacity:1;filter:brightness(1.04)}100%{opacity:1;transform:scale(1);filter:brightness(1)}}
+    @keyframes cta-enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes halo{0%,100%{box-shadow:0 0 0 0 rgba(255,218,100,0)}50%{box-shadow:0 0 18px 2px rgba(255,218,100,.5)}}
+    @keyframes glint{0%,68%{transform:translateX(-90%);opacity:0}76%{opacity:1}93%,100%{transform:translateX(90%);opacity:0}}
+    @media (prefers-reduced-motion:reduce){.poster,.stage::before,.stage::after,.cta,.cta::after{animation:none!important;opacity:1!important}.stage::before{display:none}}
   </style>
 </head>
 <body>
-  <main>
-    <div class="poster">
-      <!-- Single continuous approved poster: no visible joins, no re-rendered text -->
-      <img src="poster.png" width="725" height="2170" alt="雙重活動火熱開跑：上半部五人成團與流水獎勵，下半部幸運金大放送與抽獎獎項，最下方有兩個參加按鈕。" fetchpriority="high">
-      <a class="cta cta-line" id="lineButton" href="#" aria-label="加入LINE立即領取">
-        <img src="button-line.png" alt="" aria-hidden="true" width="622" height="105">
-      </a>
-      <a class="cta cta-register" id="registerButton" href="#" aria-label="立即註冊加入抽獎群">
-        <img src="button-register.png" alt="" aria-hidden="true" width="636" height="111">
-      </a>
-    </div>
+  <main class="stage" aria-label="萬聖狂歡限定活動">
+    <img class="poster" src="./halloween-poster.png" alt="萬聖狂歡限定，立即體驗。獨家 VBall 彈珠遊戲開跑。支援街口支付、LINE Pay、ATM、USDT。" fetchpriority="high">
+    <a class="cta customer" href="https://lin.ee/7UVxhkg" target="_blank" rel="noopener noreferrer" aria-label="加入客服"><span class="sr-only">加入客服</span></a>
+    <a class="cta reward" href="https://www.hd5957.com/" target="_blank" rel="noopener noreferrer" aria-label="領取體驗600"><span class="sr-only">領取體驗600</span></a>
   </main>
-  <div id="toast" role="status" aria-live="polite" hidden>連結尚未設定，請稍後再試。</div>
-  <script>
-    // 在兩個引號中填入正式網址；目前留空方便先測試網站及心跳動畫。
-    const LINE_URL = "https://lin.ee/VJ4P9mm";
-    const REGISTER_URL = "https://hd5957.com/?aff=na39gw";
-
-    function setupLink(id, url) {
-      const a = document.getElementById(id);
-      const validUrl = /^(https?:\/\/)/i.test(url.trim());
-      if (validUrl) {
-        a.href = url.trim();
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-      } else {
-        a.addEventListener("click", (event) => {
-          event.preventDefault();
-          const toast = document.getElementById("toast");
-          toast.hidden = false;
-        });
-      }
-    }
-    setupLink("lineButton", LINE_URL);
-    setupLink("registerButton", REGISTER_URL);
-  </script>
 </body>
 </html>
