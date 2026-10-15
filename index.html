@@ -6,41 +6,38 @@
   <meta name="theme-color" content="#10091c">
   <meta name="description" content="萬聖狂歡限定・立即體驗｜獨家 VBall 彈珠遊戲開跑">
   <title>萬聖狂歡限定・立即體驗</title>
+  <!-- V3: instant poster and CTA visibility, ambient motion only -->
   <link rel="preload" href="./halloween-poster.png" as="image">
   <style>
     *,*::before,*::after{box-sizing:border-box}
     html,body{margin:0;width:100%;min-height:100%;overflow:hidden;background:#10091c}
     body{height:100vh;height:100dvh;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif}
     .stage{position:relative;width:min(100vw,calc(100dvh * 941 / 1672));max-height:100dvh;aspect-ratio:941/1672;overflow:hidden;background:#10091c;isolation:isolate}
-    .poster{width:100%;height:100%;display:block;object-fit:fill;animation:poster-enter 3.5s cubic-bezier(.16,.75,.25,1) both;transform-origin:52% 43%}
+    .poster{width:100%;height:100%;display:block;object-fit:fill;transform-origin:52% 43%}
     /* Decorative overlays are independent of the poster and do not affect layout. */
-    .stage::before{content:"";position:absolute;z-index:4;inset:0;pointer-events:none;background:#08050e;animation:curtain 2.7s ease-out forwards}
-    .stage::after{content:"";position:absolute;z-index:3;inset:-35%;pointer-events:none;background:linear-gradient(112deg,transparent 43%,rgba(255,226,158,.19) 50%,transparent 57%);transform:translateX(-95%);animation:glint 9s 3.3s ease-in-out infinite}
-    .moonlight{position:absolute;z-index:2;pointer-events:none;top:-7%;right:-9%;width:58%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,193,76,.24),rgba(255,147,43,.11) 37%,transparent 69%);mix-blend-mode:screen;opacity:0;animation:moon-rise 5.5s .5s ease-out forwards,moon-breathe 8s 6s ease-in-out infinite}
-    .mist{position:absolute;z-index:2;pointer-events:none;left:-40%;width:180%;height:23%;bottom:21%;filter:blur(20px);opacity:0;background:radial-gradient(ellipse at 35% 60%,rgba(120,60,205,.22),transparent 60%),radial-gradient(ellipse at 76% 55%,rgba(251,123,50,.14),transparent 62%);animation:mist-flow 12s 1.3s ease-in-out infinite}
+    /* No curtain: show the full poster immediately for ad traffic. */
+    .stage::after{content:"";position:absolute;z-index:3;inset:-35%;pointer-events:none;background:linear-gradient(112deg,transparent 43%,rgba(255,226,158,.19) 50%,transparent 57%);transform:translateX(-95%);animation:glint 8s .5s ease-in-out infinite}
+    .moonlight{position:absolute;z-index:2;pointer-events:none;top:-7%;right:-9%;width:58%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,193,76,.24),rgba(255,147,43,.11) 37%,transparent 69%);mix-blend-mode:screen;opacity:.75;animation:moon-breathe 7s ease-in-out infinite}
+    .mist{position:absolute;z-index:2;pointer-events:none;left:-40%;width:180%;height:23%;bottom:21%;filter:blur(20px);opacity:0;background:radial-gradient(ellipse at 35% 60%,rgba(120,60,205,.22),transparent 60%),radial-gradient(ellipse at 76% 55%,rgba(251,123,50,.14),transparent 62%);animation:mist-flow 12s ease-in-out infinite}
     .particle-field{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none}
     .spark{position:absolute;bottom:var(--bottom);left:var(--left);width:var(--size);height:var(--size);border-radius:50%;background:radial-gradient(circle,#fff6bf 0%,#ffd471 35%,rgba(255,139,41,.1) 70%);box-shadow:0 0 8px 2px rgba(255,174,71,.55);opacity:0;animation:spark-rise var(--duration) var(--delay) linear infinite}
-    .bat{position:absolute;z-index:3;top:var(--top);left:-15%;width:var(--bat-size);height:auto;fill:#130a1c;opacity:0;filter:drop-shadow(0 1px 2px rgba(255,137,41,.35));pointer-events:none;animation:bat-fly var(--bat-duration) var(--bat-delay) ease-in-out both}
-    .title-glow{position:absolute;z-index:3;pointer-events:none;left:13%;top:8%;width:74%;height:15%;border-radius:50%;box-shadow:0 0 45px 10px rgba(255,153,40,.23);opacity:0;animation:title-flash 3.4s 1.1s ease-out both}
-    .cta{position:absolute;z-index:6;display:block;top:84.4%;height:8.7%;border-radius:18%;text-decoration:none;-webkit-tap-highlight-color:transparent;outline-offset:-3px;opacity:0;animation:cta-enter .7s 2.9s ease-out forwards}
+    .bat{position:absolute;z-index:3;top:var(--top);left:-15%;width:var(--bat-size);height:auto;fill:#130a1c;opacity:0;filter:drop-shadow(0 1px 2px rgba(255,137,41,.35));pointer-events:none;animation:bat-fly var(--bat-duration) var(--bat-delay) ease-in-out infinite}
+    .title-glow{position:absolute;z-index:3;pointer-events:none;left:13%;top:8%;width:74%;height:15%;border-radius:50%;box-shadow:0 0 45px 10px rgba(255,153,40,.23);opacity:0;animation:title-pulse 6s ease-in-out infinite}
+    .cta{position:absolute;z-index:6;display:block;top:84.4%;height:8.7%;border-radius:18%;text-decoration:none;-webkit-tap-highlight-color:transparent;outline-offset:-3px;opacity:1}
     .cta:focus-visible{outline:3px solid #fff}
     .cta.customer{left:3.0%;width:45.3%}
-    .cta.reward{left:50.1%;width:46.8%;animation-delay:3.15s}
-    .cta::after{content:"";position:absolute;inset:6%;border-radius:16px;box-shadow:0 0 0 0 rgba(255,218,100,0);animation:halo 3s 4.1s ease-in-out infinite;pointer-events:none}
+    .cta.reward{left:50.1%;width:46.8%}
+    .cta::after{content:"";position:absolute;inset:6%;border-radius:16px;box-shadow:0 0 0 0 rgba(255,218,100,0);animation:halo 3s ease-in-out infinite;pointer-events:none}
     .cta:active{transform:scale(.97)}
     .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;clip-path:inset(50%)}
-    @keyframes curtain{0%,12%{opacity:1}100%{opacity:0}}
-    @keyframes poster-enter{0%{opacity:.3;transform:scale(1.075);filter:brightness(.37) saturate(.7)}58%{opacity:1;filter:brightness(1.08) saturate(1.08)}100%{opacity:1;transform:scale(1);filter:brightness(1) saturate(1)}}
-    @keyframes moon-rise{0%{opacity:0;transform:scale(.7)}60%{opacity:1}100%{opacity:.8;transform:scale(1)}}
     @keyframes moon-breathe{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
     @keyframes mist-flow{0%{opacity:0;transform:translateX(-5%)}20%{opacity:.75}50%{transform:translateX(7%);opacity:.6}80%{opacity:.7}100%{opacity:0;transform:translateX(-5%)}}
-    @keyframes title-flash{0%,20%{opacity:0;transform:scale(.85)}50%{opacity:.75}100%{opacity:0;transform:scale(1.08)}}
+    @keyframes title-pulse{0%,100%{opacity:.05;transform:scale(.97)}45%{opacity:.6;transform:scale(1.04)}70%{opacity:.12;transform:scale(1)}}
     @keyframes spark-rise{0%,12%{opacity:0;transform:translate3d(0,0,0) scale(.4)}25%{opacity:.95}75%{opacity:.75}100%{opacity:0;transform:translate3d(var(--drift),-32vh,0) scale(.15)}}
     @keyframes bat-fly{0%{opacity:0;transform:translate(-8vw,4vh) scale(.65) rotate(-10deg)}15%{opacity:.75}70%{opacity:.8}100%{opacity:0;transform:translate(125vw,-7vh) scale(1.25) rotate(9deg)}}
-    @keyframes cta-enter{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
     @keyframes halo{0%,100%{box-shadow:0 0 0 0 rgba(255,218,100,0)}50%{box-shadow:0 0 18px 2px rgba(255,218,100,.5)}}
     @keyframes glint{0%,68%{transform:translateX(-95%);opacity:0}76%{opacity:1}93%,100%{transform:translateX(95%);opacity:0}}
-    @media (prefers-reduced-motion:reduce){.poster,.stage::before,.stage::after,.moonlight,.mist,.spark,.bat,.title-glow,.cta,.cta::after{animation:none!important}.poster,.cta{opacity:1!important;transform:none!important;filter:none!important}.stage::before,.stage::after,.moonlight,.mist,.spark,.bat,.title-glow{display:none!important}}
+    @media (prefers-reduced-motion:reduce){.poster,.stage::after,.moonlight,.mist,.spark,.bat,.title-glow,.cta,.cta::after{animation:none!important}.poster,.cta{opacity:1!important;transform:none!important;filter:none!important}.stage::after,.moonlight,.mist,.spark,.bat,.title-glow{display:none!important}}
   </style>
 </head>
 <body>
@@ -58,8 +55,8 @@
       <i class="spark" style="--left:84%;--bottom:4%;--size:3px;--duration:8.5s;--delay:4.3s;--drift:-25px"></i>
       <i class="spark" style="--left:91%;--bottom:21%;--size:3px;--duration:6.7s;--delay:1.8s;--drift:-14px"></i>
     </div>
-    <svg class="bat" style="--top:7%;--bat-size:36px;--bat-duration:4.6s;--bat-delay:1.0s" viewBox="0 0 64 32" aria-hidden="true"><path d="M32 11c-2-5-5-5-7-3-5-6-12-6-17-3 2 3 3 5 1 8-3 0-6 2-9 5 8-1 12 4 14 10 5-5 11-7 18-9 7 2 13 4 18 9 2-6 6-11 14-10-3-3-6-5-9-5-2-3-1-5 1-8-5-3-12-3-17 3-2-2-5-2-7 3z"/></svg>
-    <svg class="bat" style="--top:15%;--bat-size:21px;--bat-duration:5.6s;--bat-delay:1.7s" viewBox="0 0 64 32" aria-hidden="true"><path d="M32 11c-2-5-5-5-7-3-5-6-12-6-17-3 2 3 3 5 1 8-3 0-6 2-9 5 8-1 12 4 14 10 5-5 11-7 18-9 7 2 13 4 18 9 2-6 6-11 14-10-3-3-6-5-9-5-2-3-1-5 1-8-5-3-12-3-17 3-2-2-5-2-7 3z"/></svg>
+    <svg class="bat" style="--top:7%;--bat-size:36px;--bat-duration:7s;--bat-delay:0s" viewBox="0 0 64 32" aria-hidden="true"><path d="M32 11c-2-5-5-5-7-3-5-6-12-6-17-3 2 3 3 5 1 8-3 0-6 2-9 5 8-1 12 4 14 10 5-5 11-7 18-9 7 2 13 4 18 9 2-6 6-11 14-10-3-3-6-5-9-5-2-3-1-5 1-8-5-3-12-3-17 3-2-2-5-2-7 3z"/></svg>
+    <svg class="bat" style="--top:15%;--bat-size:21px;--bat-duration:9s;--bat-delay:2.5s" viewBox="0 0 64 32" aria-hidden="true"><path d="M32 11c-2-5-5-5-7-3-5-6-12-6-17-3 2 3 3 5 1 8-3 0-6 2-9 5 8-1 12 4 14 10 5-5 11-7 18-9 7 2 13 4 18 9 2-6 6-11 14-10-3-3-6-5-9-5-2-3-1-5 1-8-5-3-12-3-17 3-2-2-5-2-7 3z"/></svg>
     <a class="cta customer" href="https://lin.ee/7UVxhkg" target="_blank" rel="noopener noreferrer" aria-label="加入客服"><span class="sr-only">加入客服</span></a>
     <a class="cta reward" href="https://www.hd5957.com/" target="_blank" rel="noopener noreferrer" aria-label="領取體驗600"><span class="sr-only">領取體驗600</span></a>
   </main>
