@@ -11,6 +11,8 @@
   <meta property="og:image" content="https://hd68.mobile/christmas-poster.png">
   <title>聖誕狂歡限定・立即體驗</title>
   <link rel="preload" href="./christmas-poster.png" as="image">
+  <script src="./analytics-config.js" defer></script>
+  <script src="./hd68-analytics.js" defer></script>
   <style>
     *,*::before,*::after{box-sizing:border-box}
     html,body{margin:0;width:100%;min-height:100%;overflow:hidden;background:#08172c}
@@ -38,6 +40,20 @@
     @keyframes halo{0%,100%{box-shadow:0 0 0 0 rgba(255,218,100,0)}50%{box-shadow:0 0 18px 2px rgba(255,218,100,.5)}}
     @keyframes glint{0%,68%{transform:translateX(-95%);opacity:0}76%{opacity:1}93%,100%{transform:translateX(95%);opacity:0}}
     @media (prefers-reduced-motion:reduce){.stage::after,.warm-glow,.mist,.spark,.title-glow,.cta::after{animation:none!important}.stage::after,.warm-glow,.mist,.spark,.title-glow{display:none!important}}
+
+    /* Minimal consent notice: overlays only when a visitor has not decided. */
+    .hd68-privacy-tab{position:fixed;z-index:20;right:12px;bottom:calc(8px + env(safe-area-inset-bottom));font:12px system-ui,sans-serif;color:#dceaf7;background:rgba(5,20,38,.85);border:1px solid rgba(234,245,255,.45);border-radius:20px;padding:6px 11px;cursor:pointer;opacity:.84}
+    .hd68-privacy-tab:hover,.hd68-privacy-tab:focus-visible{opacity:1}
+    .hd68-consent{position:fixed;z-index:25;bottom:calc(13px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(540px,calc(100% - 20px));padding:14px 16px;background:#0b2038f2;border:1px solid #c49a49;border-radius:14px;box-shadow:0 12px 35px #000b;color:#fff;font:13px/1.55 system-ui,-apple-system,'Noto Sans TC',sans-serif}
+    .hd68-consent[hidden]{display:none!important}
+    .hd68-consent-title{font-weight:750;color:#ffe2a1;font-size:14px;margin:0 0 4px}
+    .hd68-consent p{margin:0 0 8px}
+    .hd68-consent a{color:#d5eaff;text-decoration:underline}
+    .hd68-consent-controls{display:flex;gap:10px;margin-top:10px}
+    .hd68-consent-controls button{flex:1;min-height:39px;cursor:pointer;border-radius:9px;border:1px solid #adbed4;padding:8px 10px;font:700 13px system-ui,sans-serif}
+    .hd68-consent-reject{background:#253b55;color:#fff}
+    .hd68-consent-allow{background:linear-gradient(#ffe7a1,#eab642);color:#192535;border-color:#f8d784!important}
+    @media(max-width:420px){.hd68-consent{padding:11px 12px;font-size:12px}.hd68-consent-controls button{font-size:12px}}
   </style>
 </head>
 <body>
@@ -58,5 +74,15 @@
     <a class="cta customer" href="https://lin.ee/7UVxhkg" target="_blank" rel="noopener noreferrer" aria-label="加入客服"><span class="sr-only">加入客服</span></a>
     <a class="cta reward" href="https://www.hd5957.com/" target="_blank" rel="noopener noreferrer" aria-label="獲得600點數"><span class="sr-only">獲得600點數</span></a>
   </main>
+  <button class="hd68-privacy-tab" type="button" id="hd68-privacy-settings" aria-controls="hd68-consent" aria-label="開啟隱私設定">隱私設定</button>
+  <section class="hd68-consent" id="hd68-consent" role="region" aria-label="流量分析同意設定" hidden>
+    <div class="hd68-consent-title">HD68 網站分析設定</div>
+    <p>我們希望使用 GA4 與 Microsoft Clarity 分析瀏覽、按鈕點擊及操作動線，以改善網站。若同意，可能使用分析 Cookie 與行為錄影；不接受也能正常使用網站。</p>
+    <a href="./privacy.html" target="_blank" rel="noopener noreferrer">查看隱私說明</a>
+    <div class="hd68-consent-controls">
+      <button class="hd68-consent-reject" type="button" id="hd68-consent-reject">暫不允許</button>
+      <button class="hd68-consent-allow" type="button" id="hd68-consent-allow">同意分析</button>
+    </div>
+  </section>
 </body>
 </html>
