@@ -1,4 +1,4 @@
-/* HD68 analytics / v1.0 - consent-first, no user-identifying data. */
+/* HD68 analytics hotfix 1.1: unobstructed poster, GA4 consent-denied signals. */
 (function () {
   'use strict';
   const cfg = window.HD68_ANALYTICS_CONFIG || {};
@@ -11,87 +11,82 @@
   const consentAllow = document.getElementById('hd68-consent-allow');
   const consentReject = document.getElementById('hd68-consent-reject');
   const settings = document.getElementById('hd68-privacy-settings');
-  const consentOptions = {ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'};
-  let enabled = false;
   let choice = null;
+  let clarityLoaded = false;
   try { choice = localStorage.getItem(consentKey); } catch (e) {}
-  const params = new URLSearchParams(window.location.search);
-  function getCampaign(field) { return (params.get(field) || '').slice(0,90); }
-  function showSettings() { banner.hidden = false; }
-  function hideSettings() { banner.hidden = true; }
-  function saveChoice(value) { try { localStorage.setItem(consentKey,value); } catch (e) {} }
-  function loadGa4() {
-    if (!gaValid) return;
+  function isAllowed() { return choice === 'yes'; }
+  const adDenied = {ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'};
+  const params = new URLSearchParams(location.search);
+  function campaign(field) { return (params.get(field)||'').slice(0,90); }
+  function remember(value) { try {localStorage.setItem(consentKey,value);} catch(e){} }
+
+  /* GA4 advanced consent mode. No analytics cookies by default. Depending on
+     jurisdiction and configuration, consent-denied cookieless signals may be
+     reported in aggregate, not as reliable unique users or sessions. */
+  if (gaValid) {
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { window.dataLayer.push(arguments); };
-    // Basic consent mode: no Google tag is loaded until a visitor consents.
-    window.gtag('consent','default', Object.assign({analytics_storage:'denied'},consentOptions));
-    window.gtag('consent','update', Object.assign({analytics_storage:'granted'},consentOptions));
+    window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+    window.gtag('consent','default',Object.assign({analytics_storage:'denied'},adDenied));
+    if (isAllowed()) window.gtag('consent','update',Object.assign({analytics_storage:'granted'},adDenied));
     window.gtag('js',new Date());
     window.gtag('config',gaId,{send_page_view:true});
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gaId);
-    document.head.appendChild(s);
+    const script=document.createElement('script');
+    script.async=true;
+    script.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(gaId);
+    document.head.appendChild(script);
   }
+
   function loadClarity() {
-    if (!clarityValid) return;
-    window.clarity = window.clarity || function () {
-      (window.clarity.q = window.clarity.q || []).push(arguments);
-    };
-    // Ad consent stays denied: do not enable Microsoft Ads personalization.
+    if (!clarityValid || clarityLoaded || !isAllowed()) return;
+    clarityLoaded=true;
+    window.clarity=window.clarity || function(){(window.clarity.q=window.clarity.q||[]).push(arguments);};
     window.clarity('consentv2',{ad_Storage:'denied',analytics_Storage:'granted'});
-    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function (field) {
-      const val = getCampaign(field);
-      if (val) window.clarity('set',field,val);
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(field){
+      const v=campaign(field); if(v)window.clarity('set',field,v);
     });
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.clarity.ms/tag/' + encodeURIComponent(clarityId);
-    document.head.appendChild(s);
+    const script=document.createElement('script');
+    script.async=true;
+    script.src='https://www.clarity.ms/tag/'+encodeURIComponent(clarityId);
+    document.head.appendChild(script);
   }
-  function start() {
-    if (enabled) return;
-    enabled = true;
-    loadGa4();
-    loadClarity();
-  }
-  function setChoice(allow) {
-    const previouslyActive = enabled;
-    choice = allow ? 'yes' : 'no';
-    saveChoice(choice);
-    hideSettings();
-    if (allow) { start(); return; }
-    if (previouslyActive) {
-      if (typeof window.gtag === 'function') window.gtag('consent','update',Object.assign({analytics_storage:'denied'},consentOptions));
-      if (typeof window.clarity === 'function') window.clarity('consentv2',{ad_Storage:'denied',analytics_Storage:'denied'});
-      // Unload third-party tracking scripts by reloading, without changing URLs.
-      window.location.reload();
+  if (isAllowed()) loadClarity();
+
+  function choose(allow) {
+    const wasAllowed=isAllowed();
+    choice=allow?'yes':'no';
+    remember(choice);
+    if(banner) banner.hidden=true;
+    if(allow){
+      if(gaValid)window.gtag('consent','update',Object.assign({analytics_storage:'granted'},adDenied));
+      loadClarity();
+    } else if(wasAllowed){
+      if(gaValid)window.gtag('consent','update',Object.assign({analytics_storage:'denied'},adDenied));
+      if(clarityLoaded && typeof window.clarity==='function')window.clarity('consentv2',{ad_Storage:'denied',analytics_Storage:'denied'});
+      location.reload();
     }
   }
-  consentAllow.addEventListener('click',function () {setChoice(true);});
-  consentReject.addEventListener('click',function () {setChoice(false);});
-  settings.addEventListener('click',showSettings);
-  if (choice === 'yes') start();
-  else if (choice !== 'no') showSettings();
+  // Do not pop up a banner automatically. Privacy remains accessible on request.
+  if(banner)banner.hidden=true;
+  if(settings && banner)settings.addEventListener('click',function(){banner.hidden=false;});
+  if(consentAllow)consentAllow.addEventListener('click',function(){choose(true);});
+  if(consentReject)consentReject.addEventListener('click',function(){choose(false);});
 
-  function sendCta(eventName, anchor, label) {
-    if (!enabled) return;
-    const data = {
-      cta_name: label,
-      destination_domain: new URL(anchor.href).hostname,
-      page_variant: String(cfg.pageVariant || 'unknown'),
-      transport_type: 'beacon'
-    };
-    if (gaValid && typeof window.gtag === 'function') window.gtag('event',eventName,data);
-    if (clarityValid && typeof window.clarity === 'function') {
+  function sendCta(eventName,anchor,label){
+    if(gaValid && typeof window.gtag==='function')window.gtag('event',eventName,{
+      cta_name:label,destination_domain:new URL(anchor.href).hostname,
+      page_variant:String(cfg.pageVariant||'unknown'),transport_type:'beacon'
+    });
+    if(clarityLoaded && typeof window.clarity==='function'){
       window.clarity('event',eventName);
       window.clarity('set','last_cta',label);
     }
   }
-  const customer = document.querySelector('a.cta.customer');
-  const reward = document.querySelector('a.cta.reward');
-  if (customer) customer.addEventListener('click',function () {sendCta('cta_customer_click',customer,'加入客服');});
-  if (reward) reward.addEventListener('click',function () {sendCta('cta_reward_click',reward,'獲得600點數');});
-  window.HD68Analytics = {status:function(){return {enabled:enabled,ga4Configured:gaValid,clarityConfigured:clarityValid,choice:choice};}};
+  const customer=document.querySelector('a.cta.customer');
+  const reward=document.querySelector('a.cta.reward');
+  if(customer)customer.addEventListener('click',function(){sendCta('cta_customer_click',customer,'加入客服');});
+  if(reward)reward.addEventListener('click',function(){sendCta('cta_reward_click',reward,'獲得600點數');});
+  window.HD68Analytics={status:function(){return {
+    ga4Configured:gaValid,clarityConfigured:clarityValid,
+    consent:choice||'unset',ga4Cookieless:!isAllowed(),clarityActive:clarityLoaded
+  };}};
 })();
